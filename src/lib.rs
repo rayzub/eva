@@ -16,7 +16,7 @@ pub fn new_dissasembler<'a>(bytecode_str: &'a str) -> () {
         ixs.push(Instruction{ op: ix, operand: ix_operand, total_gas: 0 });
         i = new_indx
     }
-    for ix in ixs {
-        println!("{}", ix)
+    for (indx,ix)  in ixs.iter().enumerate() {
+        println!("{} - {}", format!("{:04}", indx), ix)
     }
 }
