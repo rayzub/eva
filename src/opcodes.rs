@@ -331,20 +331,12 @@ impl<'a> From<Opcode> for &'a str {
 }
 
 pub fn peek_operand<'a> (op_indx: usize, opcode: Opcode, bytecode: &'a str) -> (Option<&'a str>, usize) {
-    let max_byte_size = match opcode {
+    let operand_size = match opcode {
         Opcode::PUSH(bytes) => Some((bytes*2).into()),
-        Opcode::DUP(bytes) => Some((bytes*2).into()),
-        Opcode::SWAP(bytes) => Some((bytes*2).into()),
-        Opcode::LOG(bytes) => Some((bytes*2).into()),
         _ => Some(0)
-    };
-
-    
-
-    let min = std::cmp::min(bytecode.len(), max_byte_size.unwrap());
-
-    if min == 0 {
+    }.unwrap();
+    if operand_size == 0 {
         return (None, op_indx)
     }
-    (Some(&bytecode[op_indx..op_indx+min]), op_indx+min)
+    (Some(&bytecode[op_indx..op_indx+operand_size]), op_indx+operand_size)
 }
