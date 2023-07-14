@@ -1,4 +1,3 @@
-use std::fmt::write;
 
 use crate::analyzer::Instruction;
 

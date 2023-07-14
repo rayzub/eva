@@ -8,11 +8,6 @@ pub struct Instruction {
     pub min_gas: usize,
 }
 
-impl Instruction {
-    fn execute(&self) -> Result<usize, super::error::ExecuteError>  {
-        Ok(0)
-    }
-}
 
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -35,7 +30,6 @@ struct Slot {
 pub struct Analyzer {
     pc: usize,
     stack: Stack,
-    // (data to be stored, if storage is cold)
     storage: Vec<Slot>,
     ixs: Vec<Instruction>,
     est_total_gas: usize,
@@ -79,7 +73,7 @@ impl Analyzer {
         }
         
         self.est_total_gas += self.calc_gas(current_ix);
-        self.pc += current_ix.execute()?;
+        self.pc += 1;
         Ok(())
     }
 }
