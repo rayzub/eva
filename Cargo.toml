@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 hex = "0.4.3"
+tui = "0.19"
+crossterm = "0.25"
+clap = "4.3.11" 
+evm = "0.39.1"

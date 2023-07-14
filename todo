@@ -1,0 +1,3 @@
+- design the stack properly, consider using something other than a Vec<u8>
+- implement dynamic gas costs 
+- implement step method
