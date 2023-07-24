@@ -1,8 +1,8 @@
 # eva
-Ethereum VM Bytecode Disasembler, written in Go.
+Ethereum VM Bytecode Disassembler, written in Rust.
 
 
 ## Features
-- Pretty-print opcodes
-- Pretty-print stack at specific step
-- Calculate total gas and cumulative gas on particular opcode
+- [x] Pretty-print opcodes
+- [ ] Pretty-print stack at a specific step
+- [x] Calculate total gas and cumulative gas on particular opcode (dynamic todo)
