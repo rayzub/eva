@@ -1,10 +1,12 @@
 use std::fmt::{Display, Formatter};
+use primitive_types::H256;
+
 use super::{stack::Stack, Opcode};
 
 #[derive(Debug, Clone)]
 pub struct Instruction {
     pub op: Opcode,
-    pub operand: Option<Vec<u8>>,
+    pub operand: Option<[u8; 32]>,
     pub min_gas: usize,
 }
 
@@ -21,31 +23,27 @@ impl Display for Instruction {
 }
 
 struct Slot {
-    is_cold: bool,
     contract: String,
-    slot: String,
-    value: String,
+    slot: H256,
+    value: H256,
 }
 
-pub struct Analyzer {
+
+pub struct ExecutionContext {
     pc: usize,
     stack: Stack,
+    memory: Vec<H256>,
     storage: Vec<Slot>,
     ixs: Vec<Instruction>,
     est_total_gas: usize,
 }
-
-// Create an instance of Disassembler
-// Iterate through each returning an Option<Instruction> which has data of the specific instruction decoded
-// Implement Display for Instruction so that we can pretty print
-
-
-impl Analyzer {
+impl ExecutionContext {
     // Consume as this method primarily loads the bytecode into the disasembler
     pub fn new(ixs: Vec<Instruction>) -> Self {
         Self { 
             stack: Stack::new(), 
-            storage: Vec::new(), 
+            storage: Vec::new(),
+            memory: Vec::new(), 
             ixs, 
             est_total_gas: 0, 
             pc: 0 
@@ -65,8 +63,8 @@ impl Analyzer {
     pub fn step(&mut self) -> Result<(), Box<dyn std::error::Error>>{
         let current_ix = self.ixs.get(self.pc).unwrap();
         if current_ix.op.is_push() { 
-            let encoded_operand = hex::encode(current_ix.operand.clone().unwrap());
-            self.stack.push(encoded_operand)?
+            let encoded_operand = current_ix.operand.clone().unwrap();
+            self.stack.push(encoded_operand.into())?
         } 
         if current_ix.op.is_pop() {
             self.stack.pop()?

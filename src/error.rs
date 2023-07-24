@@ -1,5 +1,5 @@
 
-use crate::analyzer::Instruction;
+use crate::context::Instruction;
 
 #[derive(Debug)]
 pub enum StackError {

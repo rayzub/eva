@@ -1,4 +1,3 @@
-use std::{fs, f32::consts::E, path::Path};
 use clap::{Arg, Command};
 use eva::new_dissasembler;
 
@@ -27,7 +26,5 @@ fn main() {
 
     let bin_content = std::fs::read_to_string(absolute_file_path).unwrap();
     let decoded_bytecode = hex::decode(bin_content).unwrap();
-    let analyzer = new_dissasembler(decoded_bytecode);
-
-    
+    let ctx = new_dissasembler(decoded_bytecode.as_slice());
 }

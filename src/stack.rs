@@ -1,10 +1,10 @@
 use crate::error;
+use primitive_types::H256;
+
 
 const MAX_STACK_LIMIT: usize = 1024;
-const MAX_DATA_LEN: usize = 32; // Vec<u8> size 32 bytes === 256 bits
-
 pub struct Stack {
-    data: Vec<String>
+    data: Vec<H256>
 }
 
 impl Stack { 
@@ -21,20 +21,21 @@ impl Stack {
         }
     }
 
-    pub fn push(&mut self, data: String) -> Result<(), error::StackError> {
+    pub fn push(&mut self, data: H256) -> Result<(), error::StackError> {
         if self.data.len() + 1 > MAX_STACK_LIMIT {
             return Err(error::StackError::StackTooDeep)
         }
 
-        if data.len() > MAX_DATA_LEN {
-            return Err(error::StackError::DataExceedsLimit)
-        }
+        // .try_into() in peek_operand will already enforce 32 element size lim
+        //if data.len() > MAX_DATA_LEN {
+        //    return Err(error::StackError::DataExceedsLimit)
+        //}
 
         self.data.push(data);
         Ok(())
     }
 
-    pub fn peek<'a>(&'a self, pos: usize) -> &String {
+    pub fn peek(&self, pos: usize) -> &H256 {
         self.data.get(pos).unwrap()
     } 
 }

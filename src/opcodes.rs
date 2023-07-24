@@ -358,7 +358,7 @@ impl Opcode {
             _ => 3
         }
     }
-    pub fn peek_operand(&self, op_indx: usize, bytecode: &'_ Vec<u8>) -> (Option<Vec<u8>>, usize) {
+    pub fn peek_operand(&self, op_indx: usize, bytecode: &[u8]) -> (Option<[u8; 32]>, usize) {
         let operand_size = match self {
             Opcode::PUSH(bytes) => Some((bytes+1).into()),
             _ => Some(0)
@@ -367,7 +367,15 @@ impl Opcode {
         if operand_size == 0 {
             return (None, op_indx+1)
         }
-        
-        (Some(bytecode[op_indx+1..op_indx+operand_size].to_vec()), op_indx+operand_size)
+
+        // If operand cannot be converted to sized array (need 32 bytes), then skip ix's operand completely.
+        match bytecode[op_indx+1..(op_indx+operand_size)].try_into() {
+            Ok(sized_operand) => (Some(sized_operand), op_indx+operand_size),
+            Err(err) => {
+                eprintln!("{}", err);
+                (None, op_indx+operand_size)
+            }
+        }
+        //(Some(bytecode[op_indx+1..op_indx+operand_size].try_into().expect("placeholder")), op_indx+operand_size)
     }
 }
